@@ -1524,3 +1524,52 @@ class AustriaSchool(Austria):
         end = date(year, 12, 31)
         for cur_date in rrule(DAILY, dtstart=start, until=end):
             self.append(cur_date)
+
+
+class England(HolidayBase):
+
+    def __init__(self, **kwargs):
+        self.country = 'GB'
+        HolidayBase.__init__(self, **kwargs)
+
+    def _populate(self, year):
+        # New Year’s Day
+        name = "New Year's Day"
+        jan1 = date(year, 1, 1)
+        if jan1.weekday() in WEEKEND:
+            self[jan1 + rd(weekday=MO)] = name + " (substitute day)"
+        else:
+            self[jan1] = name
+
+        # Easter
+        self[easter(year) + rd(weekday=FR(-1))] = "Good Friday"
+        self[easter(year) + rd(weekday=MO)] = "Easter Monday"
+
+        # Early May bank holiday (first Monday in May)
+        self[date(year, 5, 1) + rd(weekday=MO)] = "Early May bank holiday"
+
+        # Spring bank holiday (last Monday in May)
+        self[date(year, 5, 24) + rd(weekday=MO)] = "Spring bank holiday"
+
+        # Summer bank holiday (last Monday in August)
+        self[date(year, 8, 25) + rd(weekday=MO)] = "Summer bank holiday"
+
+        # Christmas Day
+        name = "Christmas Day"
+        dec25 = date(year, 12, 25)
+        if dec25.weekday() in WEEKEND:
+            self[date(year, 12, 27)] = name + " (substitute day)"
+        else:
+            self[dec25] = name
+
+        # Boxing day
+        name = "Boxing Day"
+        dec26 = date(year, 12, 26)
+        if dec26.weekday() in WEEKEND:
+            self[date(year, 12, 28)] = name + " (substitute day))"
+        else:
+            self[dec26] = name
+
+        # Extras
+        if year == 2012:
+            self[date(year, 6, 5)] = "Queen's Diamond Jubilee"
